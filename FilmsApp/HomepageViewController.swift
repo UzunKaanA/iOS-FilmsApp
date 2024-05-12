@@ -67,23 +67,43 @@ class HomepageViewController: UIViewController {
 
 }
 
-extension HomepageViewController: UICollectionViewDelegate, UICollectionViewDataSource {
-  func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-    return filmsLists.count //Run *this* many times
-  }
-
-  func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-    let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "filmsCell", for: indexPath) as! FilmsCollectionViewCell
-
-    let film = filmsLists[indexPath.row]
-
-    cell.ivFilm.image = UIImage(named: film.image!)
-    cell.lblFilmPrice.text = "\(film.price!)₺"
-
-    cell.layer.borderColor = UIColor.lightGray.cgColor
-    cell.layer.borderWidth = 0.3
-    cell.layer.cornerRadius = 10.0
-
-    return cell
-  }
+extension HomepageViewController: UICollectionViewDelegate, UICollectionViewDataSource, CellProtocol {
+    func addToCartClicked(indexPath: IndexPath) {
+        let film = filmsLists[indexPath.row]
+        print("Homepage: \(film.name!) added to cart!")
+        
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return filmsLists.count //Run *this* many times
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "filmsCell", for: indexPath) as! FilmsCollectionViewCell
+        
+        let film = filmsLists[indexPath.row]
+        
+        cell.ivFilm.image = UIImage(named: film.image!)
+        cell.lblFilmPrice.text = "\(film.price!)₺"
+        
+        cell.layer.borderColor = UIColor.lightGray.cgColor
+        cell.layer.borderWidth = 0.3
+        cell.layer.cornerRadius = 10.0
+        
+        return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let film = filmsLists[indexPath.row]
+        performSegue(withIdentifier: "toDetails", sender: film)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "toDetails"{
+            if let film = sender as? Films {
+                let vc = segue.destination as! DetailsViewController
+                vc.film = film
+            }
+        }
+    }
 }

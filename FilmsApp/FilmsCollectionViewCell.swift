@@ -7,12 +7,18 @@
 
 import UIKit
 
+protocol CellProtocol {
+    func addToCartClicked(indexPath: IndexPath)
+}
+
 class FilmsCollectionViewCell: UICollectionViewCell {
   @IBOutlet weak var ivFilm: UIImageView!
   @IBOutlet weak var lblFilmPrice: UILabel!
   
-
-  @IBAction func btnAddToCart(_ sender: Any) {
+    var cellProtocol:CellProtocol?
+    var indexPath:IndexPath?
     
+  @IBAction func btnAddToCart(_ sender: Any) {
+      cellProtocol?.addToCartClicked(indexPath: indexPath!)
   }
 }
